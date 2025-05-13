@@ -15,6 +15,8 @@ import ProductEditPage from "./pages/Admin/ProductEdit";
 import CustomerManagementPage from "./pages/Admin/CustomerManagement";
 import AdminManagementPage from "./pages/Admin/AdminManagement";
 import AdminProfilePage from "./pages/Admin/AdminProfile";
+import FlashSalesAddPage from "./pages/Admin/FlashSalesAdd";
+import FlashSalesListPage from "./pages/Admin/FlashSalesList";
 import ReportPage from "./pages/Admin/Report";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./auth/AuthProvider";
@@ -26,9 +28,9 @@ const ROUTES = {
     {
       path: "/customer/homepage",
       element: (
-        <PrivateRoute requiredRole="customer">
+        //<PrivateRoute requiredRole="customer">
           {/* Customer Dashboard */}
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
   ],
@@ -37,97 +39,121 @@ const ROUTES = {
     {
       path: "/admin/homepage",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <HomepageAdmin />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/dashboard",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <DashboardPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/inventory/stock-management",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <StackManagementPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/inventory/stock-management/:productId",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <ProductEditPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/inventory/products-reviews",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <ProductReviewLandingPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/inventory/products-reviews/:productId",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <ProductReviewDetailPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "admin/orders/track",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <TrackOrderPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "admin/orders/track/:orderId",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <TrackOrdersDetailPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "admin/user/customers",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <CustomerManagementPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "admin/user/admins",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <AdminManagementPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
     },
     {
       path: "admin/user/admins/:adminId",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <AdminProfilePage />
-        </PrivateRoute>
+        //</PrivateRoute>
+      ),
+    },
+    {
+      path: "admin/flash-sales",
+      element: (
+        //<PrivateRoute requiredRole="Super Admin">
+          <FlashSalesListPage />
+        //</PrivateRoute>
+      ),
+    },
+    // {
+    //   path: "admin/flash-sales/add",
+    //   element: (
+    //     //<PrivateRoute requiredRole="Super Admin">
+    //       <FlashSalesAddPage />
+    //     //</PrivateRoute>
+    //   ),
+    // },
+    {
+      path: "admin/flash-sales/edit/:id",
+      element: (
+        //<PrivateRoute requiredRole="Super Admin">
+          <FlashSalesAddPage />
+        //</PrivateRoute>
       ),
     },
     {
       path: "/admin/report",
       element: (
-        <PrivateRoute requiredRole="Super Admin">
+        //<PrivateRoute requiredRole="Super Admin">
           <ReportPage />
-        </PrivateRoute>
+        //</PrivateRoute>
       ),
 
     },

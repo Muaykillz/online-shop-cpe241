@@ -1,29 +1,56 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Edit, Camera, Save } from "lucide-react";
+import apiClient from "../../api/AxiosInterceptor";
 
-const AdminProfile = ({ adminData: initialData, onSave }) => {
+const AdminProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [adminData, setAdminData] = useState(
-    initialData || {
-      adminId: "000001",
-      userId: "000001",
-      firstName: "Nawapol",
-      lastName: "Tanprasert",
-      email: "mooham.c@onlineshop.com",
-      phone: "+66 98 765 4321",
-      role: "Super Admin",
-      profileImage: "https://i.pravatar.cc/300", // Default image path
-    }
-  );
+  const [adminData, setAdminData] = useState(null);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const [message, setMessage] = useState("");
   const fileInputRef = useRef(null);
 
-  const toggleEditMode = () => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await apiClient.get("/admin/profile");
+        const data = res.data.data;
+
+        const [firstName, lastName] = (data.name || "").split(" ");
+        setAdminData({
+          adminId: data.admin_id,
+          userId: data.user_id,
+          firstName: firstName || "",
+          lastName: lastName || "",
+          email: data.email || "",
+          phone: data.phone_number || "",
+          role: data.role_name || "",
+          profileImage: data.image_profile_path || "https://i.pravatar.cc/300",
+        });
+      } catch (err) {
+        setMessage("Failed to load profile.");
+        console.error(err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const toggleEditMode = async () => {
     if (isEditing) {
-      if (onSave) {
-        onSave(adminData);
-      } else {
-        console.log("Saving profile changes:", adminData);
+      try {
+        const payload = {
+          first_name: adminData.firstName,
+          last_name: adminData.lastName,
+          email: adminData.email,
+          phone_number: adminData.phone,
+          image_profile_path: adminData.profileImage,
+        };
+
+        await apiClient.put("/admin/profile", payload);
+        setMessage("Profile updated successfully.");
+      } catch (err) {
+        setMessage("Failed to update profile.");
+        console.error(err);
       }
     }
     setIsEditing(!isEditing);
@@ -31,10 +58,7 @@ const AdminProfile = ({ adminData: initialData, onSave }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAdminData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setAdminData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageClick = () => {
@@ -44,7 +68,7 @@ const AdminProfile = ({ adminData: initialData, onSave }) => {
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setAdminData((prev) => ({
@@ -56,7 +80,10 @@ const AdminProfile = ({ adminData: initialData, onSave }) => {
     }
   };
 
-  // Full name display
+  if (!adminData) {
+    return <div className="text-sm text-gray-500">Loading profile...</div>;
+  }
+
   const fullName = `${adminData.firstName} ${adminData.lastName}`;
 
   return (
@@ -69,14 +96,14 @@ const AdminProfile = ({ adminData: initialData, onSave }) => {
           onClick={toggleEditMode}
           className="flex items-center gap-1 px-1.5 py-1 text-xs text-slate-500 border border-slate-200 rounded hover:bg-slate-50"
         >
-          {isEditing ? (
-            <Save size={13} className="text-slate-500" />
-          ) : (
-            <Edit size={13} className="text-slate-500" />
-          )}
+          {isEditing ? <Save size={13} /> : <Edit size={13} />}
           <span>{isEditing ? "Save profile" : "Edit profile"}</span>
         </button>
       </div>
+
+      {message && (
+        <div className="text-xs text-center text-red-500 mb-2">{message}</div>
+      )}
 
       <div className="flex items-center mb-5">
         <div
@@ -115,125 +142,71 @@ const AdminProfile = ({ adminData: initialData, onSave }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Admin ID Field - Locked */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            Admin ID
-          </label>
-          <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-            {adminData.adminId}
-          </div>
-        </div>
-
-        {/* User ID Field - Locked */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            User ID
-          </label>
-          <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-            {adminData.userId}
-          </div>
-        </div>
-
-        {/* First Name Field */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            First Name
-          </label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={adminData.firstName}
-              name="firstName"
-              onChange={handleInputChange}
-              className="w-full px-2 py-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded focus:outline-none focus:border-slate-300 h-[30px] font-satoshi"
-            />
-          ) : (
-            <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-              {adminData.firstName}
-            </div>
-          )}
-        </div>
-
-        {/* Last Name Field */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            Last Name
-          </label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={adminData.lastName}
-              name="lastName"
-              onChange={handleInputChange}
-              className="w-full px-2 py-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded focus:outline-none focus:border-slate-300 h-[30px] font-satoshi"
-            />
-          ) : (
-            <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-              {adminData.lastName}
-            </div>
-          )}
-        </div>
-
-        {/* Email Field */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            Email
-          </label>
-          {isEditing ? (
-            <input
-              type="email"
-              value={adminData.email}
-              name="email"
-              onChange={handleInputChange}
-              className="w-full px-2 py-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded focus:outline-none focus:border-slate-300 h-[30px] font-satoshi"
-            />
-          ) : (
-            <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-              {adminData.email}
-            </div>
-          )}
-        </div>
-
-        {/* Phone Number Field */}
-        <div>
-          <label className="block text-xs font-satoshi text-slate-900 mb-1">
-            Phone Number
-          </label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={adminData.phone}
-              name="phone"
-              onChange={handleInputChange}
-              className="w-full px-2 py-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded focus:outline-none focus:border-slate-300 h-[30px] font-satoshi"
-            />
-          ) : (
-            <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
-              {adminData.phone}
-            </div>
-          )}
-        </div>
+        <LockedField label="Admin ID" value={adminData.adminId} />
+        <LockedField label="User ID" value={adminData.userId} />
+        <EditableField
+          label="First Name"
+          name="firstName"
+          value={adminData.firstName}
+          isEditing={isEditing}
+          onChange={handleInputChange}
+        />
+        <EditableField
+          label="Last Name"
+          name="lastName"
+          value={adminData.lastName}
+          isEditing={isEditing}
+          onChange={handleInputChange}
+        />
+        <EditableField
+          label="Email"
+          name="email"
+          value={adminData.email}
+          isEditing={isEditing}
+          onChange={handleInputChange}
+        />
+        <EditableField
+          label="Phone Number"
+          name="phone"
+          value={adminData.phone}
+          isEditing={isEditing}
+          onChange={handleInputChange}
+        />
       </div>
     </div>
   );
 };
 
-export default AdminProfile;
+const EditableField = ({ label, name, value, isEditing, onChange }) => (
+  <div>
+    <label className="block text-xs font-satoshi text-slate-900 mb-1">
+      {label}
+    </label>
+    {isEditing ? (
+      <input
+        type="text"
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full px-2 py-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded focus:outline-none focus:border-slate-300 h-[30px] font-satoshi"
+      />
+    ) : (
+      <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
+        {value}
+      </div>
+    )}
+  </div>
+);
 
-/*
-Example Usage:
-<AdminProfile
-  adminData={{
-    adminId: "000001",
-    userId: "000001",
-    firstName: "Nawapol",
-    lastName: "Tanprasert",
-    email: "mooham.c@onlineshop.com",
-    phone: "+66 98 765 4321",
-    role: "Super Admin",
-    profileImage: "https://i.pravatar.cc/300"
-  }}
-  onSave={(updatedData) => console.log("Profile updated:", updatedData)}
-/>
-*/
+const LockedField = ({ label, value }) => (
+  <div>
+    <label className="block text-xs font-satoshi text-slate-900 mb-1">
+      {label}
+    </label>
+    <div className="w-full px-2 py-1.5 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded h-[30px] flex items-center font-satoshi">
+      {value}
+    </div>
+  </div>
+);
+
+export default AdminProfile;
