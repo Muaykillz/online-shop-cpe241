@@ -127,7 +127,7 @@ function FlashSalesListPage() {
         {loading ? (
           <div className="text-center py-10">Loading...</div>
         ) : (
-          <FlashSalesTable initialData={flashSalesData} />
+          <FlashSalesTable />
         )}
 
         {/* ✅ Pagination */}

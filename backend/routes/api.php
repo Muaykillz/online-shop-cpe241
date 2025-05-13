@@ -90,6 +90,7 @@ Route::middleware([Cors::class])->group(function () {
             Route::get('profile', [AdminProfileController::class, 'getProfile']);
             Route::put('profile', [AdminProfileController::class, 'updateProfile']);
 
+            Route::post('promotion/create', [AdminFlashSaleController::class, 'createFlashSale']);
             Route::get('promotion', [AdminFlashSaleController::class, 'getFlashSaleBy']);
             Route::get('promotion/{promotion_id}', [AdminFlashSaleController::class, 'getFlashSaleByID']);
             Route::patch('promotion/{promotion_id}', [AdminFlashSaleController::class, 'updateFlashSaleByID']);

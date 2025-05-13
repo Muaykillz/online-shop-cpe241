@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react"
-import { Plus, Trash2 } from "lucide-react"
-import ProductSelectorModal from "../product/ProductSelectorModal"
-
+import { useState, useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import ProductSelectorModal from "../product/ProductSelectorModal";
 
 const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -11,49 +10,50 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
     releaseDate: "",
     expiryDate: "",
     status: true,
+    bannerPath: "",
     products: [],
-  })
-  const [isSelectorOpen, setIsSelectorOpen] = useState(false)
+  });
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   useEffect(() => {
-    if (initialData) setFormData(initialData)
-  }, [initialData])
+    if (initialData) setFormData(initialData);
+  }, [initialData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleToggleStatus = () => {
     setFormData((prev) => ({
       ...prev,
       status: !prev.status,
-    }))
-  }
+    }));
+  };
 
   const handleRemoveProduct = (index) => {
     setFormData((prev) => ({
       ...prev,
       products: prev.products.filter((_, i) => i !== index),
-    }))
-  }
+    }));
+  };
 
   const handleProductSelect = (selectedProducts) => {
     const unique = selectedProducts.filter(
       (p) => !formData.products.some((existing) => existing.id === p.id)
-    )
+    );
     setFormData((prev) => ({
       ...prev,
       products: [...prev.products, ...unique],
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = () => {
-    if (onSubmit) onSubmit(formData)
-  }
+    if (onSubmit) onSubmit(formData);
+  };
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
@@ -61,7 +61,9 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {mode === "add" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ID Flash sales</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ID Flash sales
+              </label>
               <input
                 type="text"
                 name="id"
@@ -72,7 +74,9 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Promotions Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Promotions Name
+            </label>
             <input
               type="text"
               name="promotionName"
@@ -82,7 +86,9 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Discount percent</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Discount percent
+            </label>
             <div className="relative">
               <input
                 type="number"
@@ -95,7 +101,9 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Start Date
+            </label>
             <input
               type="date"
               name="releaseDate"
@@ -103,7 +111,9 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
               onChange={handleInputChange}
               className="w-full p-2 border rounded-md"
             />
-            <label className="block text-sm font-medium text-gray-700 mt-2 mb-1">End Date</label>
+            <label className="block text-sm font-medium text-gray-700 mt-2 mb-1">
+              End Date
+            </label>
             <input
               type="date"
               name="expiryDate"
@@ -113,6 +123,20 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             />
           </div>
         </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Banner Image URL
+          </label>
+          <input
+            type="text"
+            name="bannerPath"
+            value={formData.bannerPath}
+            onChange={handleInputChange}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
         <div className="flex justify-between items-center mb-6">
           <div className="text-sm font-medium text-gray-700">Status</div>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -128,6 +152,7 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             </span>
           </label>
         </div>
+
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-4">Items in this promotion</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -164,8 +189,12 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
                       />
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{product.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{product.price.toFixed(2)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{product.promotionPrice.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {!isNaN(product.price) ? Number(product.price).toFixed(2) : "-"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {!isNaN(product.promotionPrice) ? Number(product.promotionPrice).toFixed(2) : "-"}
+                    </td>
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => handleRemoveProduct(index)}
@@ -180,6 +209,7 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
             </table>
           </div>
         </div>
+
         <div className="flex justify-between items-center">
           <button
             onClick={() => setIsSelectorOpen(true)}
@@ -203,13 +233,14 @@ const FlashSaleForm = ({ initialData, mode = "add", onSubmit }) => {
           </div>
         </div>
       </div>
+
       <ProductSelectorModal
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
         onSelect={handleProductSelect}
       />
     </div>
-  )
-}
+  );
+};
 
-export default FlashSaleForm
+export default FlashSaleForm;
