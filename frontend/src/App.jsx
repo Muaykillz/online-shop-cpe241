@@ -17,6 +17,7 @@ import AdminManagementPage from "./pages/Admin/AdminManagement";
 import AdminProfilePage from "./pages/Admin/AdminProfile";
 import FlashSalesAddPage from "./pages/Admin/FlashSalesAdd";
 import FlashSalesListPage from "./pages/Admin/FlashSalesList";
+import FlashSalesEditPage from "./pages/Admin/FlashSalesEditPage";
 import ReportPage from "./pages/Admin/Report";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./auth/AuthProvider";
@@ -144,7 +145,7 @@ const ROUTES = {
       path: "admin/flash-sales/edit/:id",
       element: (
         //<PrivateRoute requiredRole="Super Admin">
-          <FlashSalesAddPage />
+          <FlashSalesEditPage />
         //</PrivateRoute>
       ),
     },

@@ -14,7 +14,7 @@ const FlashSalesEditPage = () => {
   useEffect(() => {
     const fetchFlashSale = async () => {
       try {
-        const res = await apiClient.get(`/admin/flash-sales/${id}`)
+        const res = await apiClient.get(`/admin/promotion/${id}`)
         const p = res.data.promotion
         setFlashSale({
           id: p.promotion_id,
