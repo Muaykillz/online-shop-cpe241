@@ -5,7 +5,7 @@ A full-stack e-commerce application built with React, Laravel, and MySQL.
 ## Tech Stack
 
 ### Frontend
-![Frontend Stack](https://skillicons.dev/icons?i=react,tailwind,vite)
+![Frontend Stack](https://skillicons.dev/icons?i=react,tailwind,vite) 
 
 ### Backend
 ![Backend Stack](https://skillicons.dev/icons?i=laravel,mysql)
